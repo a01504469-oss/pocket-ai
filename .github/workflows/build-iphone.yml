@@ -1,0 +1,32 @@
+name: Build Pocket AI for iPhone
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract app source
+        run: unzip -q Pocket-AI-Source.zip -d source
+      - name: Show compiler
+        run: xcodebuild -version
+      - name: Build unsigned iPhone app
+        working-directory: source
+        run: |
+          xcodebuild -project mlx-swift-examples.xcodeproj -scheme MLXChatExample -configuration Release -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' PRODUCT_BUNDLE_IDENTIFIER=app.pocketai.chat INFOPLIST_KEY_CFBundleDisplayName='Pocket AI' build
+      - name: Package for local signing
+        working-directory: source
+        run: |
+          mkdir -p package/Payload
+          cp -R build/Build/Products/Release-iphoneos/MLXChatExample.app package/Payload/
+          cd package
+          zip -qry ../Pocket-AI-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Pocket-AI-unsigned
+          path: source/Pocket-AI-unsigned.ipa
+          retention-days: 3
+
