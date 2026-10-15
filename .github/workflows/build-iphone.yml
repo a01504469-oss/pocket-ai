@@ -16,7 +16,7 @@ jobs:
       - name: Build unsigned iPhone app
         working-directory: source
         run: |
-          xcodebuild -project mlx-swift-examples.xcodeproj -scheme MLXChatExample -configuration Release -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' PRODUCT_BUNDLE_IDENTIFIER=app.pocketai.chat INFOPLIST_KEY_CFBundleDisplayName='Pocket AI' build
+          xcodebuild -skipMacroValidation -project mlx-swift-examples.xcodeproj -scheme MLXChatExample -configuration Release -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' PRODUCT_BUNDLE_IDENTIFIER=app.pocketai.chat INFOPLIST_KEY_CFBundleDisplayName='Pocket AI' build
       - name: Package for local signing
         working-directory: source
         run: |
@@ -29,4 +29,5 @@ jobs:
           name: Pocket-AI-unsigned
           path: source/Pocket-AI-unsigned.ipa
           retention-days: 3
+
 
